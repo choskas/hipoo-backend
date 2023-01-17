@@ -58,8 +58,8 @@ router.put("/api/edit-theme", async (req, res, next) => {
 
 router.delete("/api/delete-theme", async (req, res, next) => {
   try {
-    errorNoID(req.params.id, res);
-    await Themes.findByIdAndDelete(req.params.id);
+    errorNoID(req.query.id, res);
+    await Themes.findByIdAndDelete(req.query.id);
     return res
       .status(200)
       .json({ message: "Tema borrado exitosamente", error: false });
