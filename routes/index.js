@@ -36,8 +36,8 @@ router.post("/api/create-theme", async (req, res, next) => {
 
 router.put("/api/edit-theme", async (req, res, next) => {
   try {
-    errorNoID(req.body.id, res);
-    let image = await Themes.findById(req.body.id);
+    errorNoID(req.body._id, res);
+    let image = await Themes.findById(req.body._id);
     if (req.body.logo) {
       image = await cloudinary.uploader.upload(req.body.logo,{
         folder: "hipoo",
