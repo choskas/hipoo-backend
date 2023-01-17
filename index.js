@@ -11,7 +11,7 @@ const app = express();
 // Middlewares
 app.use(helmet());
 app.disable("x-powered-by");
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '300kb'}));
 app.use(cors());
 
 // Middlewares for DDoS and bruteforce attacks
