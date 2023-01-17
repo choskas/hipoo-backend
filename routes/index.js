@@ -72,7 +72,7 @@ router.put("/api/edit-theme", async (req, res, next) => {
       data: response,
     });
   } catch (error) {
-    res.status(500).json({ message: "Error al editar el tema", error: true });
+    res.status(500).json({ message: error, error: true });
   }
 });
 
