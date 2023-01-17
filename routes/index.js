@@ -36,23 +36,43 @@ router.post("/api/create-theme", async (req, res, next) => {
 
 router.put("/api/edit-theme", async (req, res, next) => {
   try {
+    const { title, client, logo, colors, status, primaryColor } = req.body;
     errorNoID(req.body._id, res);
     let image = await Themes.findById(req.body._id);
     if (req.body.logo) {
-      image = await cloudinary.uploader.upload(req.body.logo,{
+      image = await cloudinary.uploader.upload(req.body.logo, {
         folder: "hipoo",
       });
-      await Themes.findByIdAndUpdate(req.body.id,{ ...req.body, logo: image.secure_url });
+      await Themes.findByIdAndUpdate(req.body._id, {
+        title,
+        client,
+        colors,
+        logo: image.secure_url,
+        status,
+        primaryColor,
+      });
+      return res.status(200).json({
+        message: "Tema editado exitosamente",
+        error: false,
+        data: response,
+      });
     }
 
-    const response = await Themes.findByIdAndUpdate(req.body.id, { ...req.body });
-    return res
-      .status(200)
-      .json({ message: "Tema editado exitosamente", error: false, data: response });
+    const response = await Themes.findByIdAndUpdate(req.body._id, {
+      title,
+      client,
+      colors,
+      logo: image.logo,
+      status,
+      primaryColor,
+    });
+    return res.status(200).json({
+      message: "Tema editado exitosamente",
+      error: false,
+      data: response,
+    });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error al editar el tema", error: true });
+    res.status(500).json({ message: "Error al editar el tema", error: true });
   }
 });
 
@@ -64,37 +84,34 @@ router.delete("/api/delete-theme", async (req, res, next) => {
       .status(200)
       .json({ message: "Tema borrado exitosamente", error: false });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error al borrar el tema", error: true });
+    res.status(500).json({ message: "Error al borrar el tema", error: true });
   }
 });
 
-
 router.get("/api/themes", async (req, res, next) => {
-    try {
-      const themes = await Themes.find()
-      return res
-        .status(200)
-        .json({ message: "Todos los temas", data: themes, error: false });
-    } catch (error) {
-      res
-        .status(500)
-        .json({ message: "Error al encontrar los temas", error: true });
-    }
-  });
+  try {
+    const themes = await Themes.find();
+    return res
+      .status(200)
+      .json({ message: "Todos los temas", data: themes, error: false });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error al encontrar los temas", error: true });
+  }
+});
 
-  router.get("/api/theme", async (req, res, next) => {
-    try {
-      const theme = await Themes.findById(req.body.id)
-      return res
-        .status(200)
-        .json({ message: "Tema unico", data: theme, error: false });
-    } catch (error) {
-      res
-        .status(500)
-        .json({ message: "Error al encontrar el tema", error: true });
-    }
-  });
+router.get("/api/theme", async (req, res, next) => {
+  try {
+    const theme = await Themes.findById(req.body.id);
+    return res
+      .status(200)
+      .json({ message: "Tema unico", data: theme, error: false });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error al encontrar el tema", error: true });
+  }
+});
 
 module.exports = router;
