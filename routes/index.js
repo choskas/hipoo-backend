@@ -43,7 +43,7 @@ router.put("/api/edit-theme", async (req, res, next) => {
       image = await cloudinary.uploader.upload(req.body.logo, {
         folder: "hipoo",
       });
-      await Themes.findByIdAndUpdate(req.body._id, {
+      const response = await Themes.findByIdAndUpdate(req.body._id, {
         title,
         client,
         colors,
